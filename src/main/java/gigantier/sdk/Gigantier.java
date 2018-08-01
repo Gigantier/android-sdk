@@ -111,7 +111,7 @@ public class Gigantier {
 
     Log.d(TAG, "Exec post to: " + uri + " -- retries: " + retries);
 
-    gateway.execMethod(Request.Method.POST, uri, buildHeaders(), body, responseListener, (code, msg) -> {
+    gateway.execMethod(Request.Method.POST, uri, null, body, responseListener, (code, msg) -> {
       ResponseListener<String> onTokenRenewed = token -> {
         Log.d(TAG, "Token renewed, executing again post to " + uri);
 
@@ -172,7 +172,7 @@ public class Gigantier {
     requestBody.put("client_secret", config.clientSecret);
     requestBody.put("scope", config.scope);
 
-    gateway.execMethod(Request.Method.POST, config.authUri, buildHeaders(), requestBody, (response) -> {
+    gateway.execMethod(Request.Method.POST, config.authUri, null, requestBody, (response) -> {
       Credential credential = new Credential();
 
       try {
@@ -181,7 +181,7 @@ public class Gigantier {
         } else {
           credential.accessToken = response.getString("access_token");
           credential.expires = response.getLong("expires_in");
-          credential.refreshToken = response.getString("refresh_token");
+          credential.refreshToken = response.optString("refresh_token", "");
           responseListener.onResponse(credential);
         }
       } catch (JSONException e) {
@@ -197,12 +197,6 @@ public class Gigantier {
     preferences.setUserToken(credential.accessToken);
     preferences.setUserRefreshToken(credential.refreshToken);
     preferences.setUserTokenExpiration(credential.expires);
-  }
-
-  private Map<String, String> buildHeaders() {
-    Map<String, String> headers = new HashMap<>();
-    headers.put("Content-Type", config.contentType);
-    return headers;
   }
 
 }

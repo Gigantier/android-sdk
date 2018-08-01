@@ -69,6 +69,7 @@ public class Gateway {
     for (String key: body.keySet()) {
       requestBody.put(key, body.get(key));
     }
+
     return requestBody;
   }
 
@@ -81,7 +82,7 @@ public class Gateway {
 
   private Response.ErrorListener onError(final ErrorListener listener) {
     return error -> {
-      Log.e(TAG, error.getMessage(), error.getCause());
+      Log.e(TAG, error.getMessage(), error);
 
       String msg = "no-network-response";
       int statusCode = -1;
