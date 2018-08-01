@@ -20,7 +20,7 @@ allprojects {
 And this in you app build.gradle:
 ```java
 dependencies {
-    implementation 'com.github.gigantier:android-sdk:1.0.0'
+    implementation 'com.github.gigantier:android-sdk:1.0.1'
 }
 ```
 
