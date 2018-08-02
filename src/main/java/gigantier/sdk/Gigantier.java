@@ -111,7 +111,7 @@ public class Gigantier {
 
     Log.d(TAG, "Exec post to: " + uri + " -- retries: " + retries);
 
-    gateway.execMethod(Request.Method.POST, uri, null, body, responseListener, (code, msg) -> {
+    gateway.execMethod(Request.Method.POST, uri, buildHeaders(), body, responseListener, (code, msg) -> {
       ResponseListener<String> onTokenRenewed = token -> {
         Log.d(TAG, "Token renewed, executing again post to " + uri);
 
@@ -172,7 +172,7 @@ public class Gigantier {
     requestBody.put("client_secret", config.clientSecret);
     requestBody.put("scope", config.scope);
 
-    gateway.execMethod(Request.Method.POST, config.authUri, null, requestBody, (response) -> {
+    gateway.execMethod(Request.Method.POST, config.authUri, buildHeaders(), requestBody, (response) -> {
       Credential credential = new Credential();
 
       try {
@@ -197,6 +197,15 @@ public class Gigantier {
     preferences.setUserToken(credential.accessToken);
     preferences.setUserRefreshToken(credential.refreshToken);
     preferences.setUserTokenExpiration(credential.expires);
+  }
+
+  private Map<String, String> buildHeaders() {
+    Map<String, String> headers = new HashMap<>();
+    headers.put(Constants.SDK_LANG_HEADER, Constants.SDK_LANG);
+    headers.put(Constants.SDK_VERSION_HEADER, BuildConfig.VERSION_NAME);
+    if (config.application != null) headers.put(Constants.SDK_APP_HEADER, config.application);
+
+    return headers;
   }
 
 }

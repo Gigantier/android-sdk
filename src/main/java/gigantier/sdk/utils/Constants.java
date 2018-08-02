@@ -12,5 +12,10 @@ public class Constants {
   final public static String GRANT_TYPE_APP = "client_credentials";
   final public static String GRANT_TYPE_USER = "password";
   final public static String GRANT_TYPE_REFRESH = "refresh_token";
+  final public static String SDK_LANG = "Android";
+  final public static String SDK_LANG_HEADER = "X-GIGANTIER-SDK-LANGUAGE";
+  final public static String SDK_VERSION_HEADER = "X-GIGANTIER-SDK-VERSION";
+  final public static String SDK_APP_HEADER = "X-GIGANTIER-APPLICATION";
+
 
 }

@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.Matchers.is;
 
+import gigantier.sdk.BuildConfig;
 import gigantier.sdk.Gigantier;
 import gigantier.sdk.endpoints.Config;
 import gigantier.sdk.utils.Constants;
@@ -40,6 +41,7 @@ public class GigantierTest {
   public static final String USER_PWD = "pasword";
   public static final String USER_NAME = "Test";
   public static final String USER_SURNAME = "Foo";
+  public static final String TEST_APP = "TEST_APP";
 
   private Gigantier gigantier;
   private MockWebServer server;
@@ -57,6 +59,7 @@ public class GigantierTest {
     config = new Config();
     config.clientId = "SOME_CLIENT_ID";
     config.clientSecret = "SOME_CLIENT_SECRET";
+    config.application = TEST_APP;
     config.scope = SCOPE;
     config.version = API_VERSION;
     config.host = server.getHostName() + ":" + server.getPort();
@@ -75,12 +78,10 @@ public class GigantierTest {
 
         RecordedRequest request = getRecordedRequest();
 
-        assertEquals("POST " + config.buildPath(Constants.AUTH_URI) + " HTTP/1.1", request.getRequestLine());
-        assertEquals(Constants.CONTENT_TYPE, request.getHeader("Content-Type"));
+        basicRequestValidation(request, Constants.AUTH_URI);
 
         JSONObject tokenRequestBody = new JSONObject(request.getBody().readUtf8());
         assertEquals(Constants.GRANT_TYPE_USER, tokenRequestBody.getString("grant_type"));
-
 
         assertThat(response.accessToken, is(ACCESS_TOKEN));
         assertThat(response.expires, is(EXPIRES_IN));
@@ -100,8 +101,7 @@ public class GigantierTest {
         responseListenerTemplate(callback, () -> fail("Response ok, but must be unauthorized error"));
       }, (statusCode, msg) -> errorListenerTemplate(callback, () -> {
         RecordedRequest request = getRecordedRequest();
-        assertEquals("POST " + config.buildPath(Constants.AUTH_URI) + " HTTP/1.1", request.getRequestLine());
-        assertEquals(Constants.CONTENT_TYPE, request.getHeader("Content-Type"));
+        basicRequestValidation(request, Constants.AUTH_URI);
         assertThat(statusCode, is(UNAUTHORIZED_STATUS_CODE));
 
         JSONObject tokenRequestBody = new JSONObject(request.getBody().readUtf8());
@@ -123,16 +123,14 @@ public class GigantierTest {
 
         // access token request
         RecordedRequest tokenRequest = getRecordedRequest();
-        assertEquals("POST " + config.buildPath(Constants.AUTH_URI) + " HTTP/1.1", tokenRequest.getRequestLine());
-        assertEquals(Constants.CONTENT_TYPE, tokenRequest.getHeader("Content-Type"));
+        basicRequestValidation(tokenRequest, Constants.AUTH_URI);
 
         JSONObject tokenRequestBody = new JSONObject(tokenRequest.getBody().readUtf8());
         assertEquals(Constants.GRANT_TYPE_APP, tokenRequestBody.getString("grant_type"));
 
         // category request
         RecordedRequest categoryRequest = getRecordedRequest();
-        assertEquals("POST " + config.buildPath(CATEGORY_URI) + " HTTP/1.1", categoryRequest.getRequestLine());
-        assertEquals(Constants.CONTENT_TYPE, categoryRequest.getHeader("Content-Type"));
+        basicRequestValidation(categoryRequest, CATEGORY_URI);
 
         JSONObject categoriesRequestBody = new JSONObject(categoryRequest.getBody().readUtf8());
         assertEquals(ACCESS_TOKEN, categoriesRequestBody.getString("access_token"));
@@ -162,32 +160,28 @@ public class GigantierTest {
 
         // first access token request
         RecordedRequest tokenRequest = getRecordedRequest();
-        assertEquals("POST " + config.buildPath(Constants.AUTH_URI) + " HTTP/1.1", tokenRequest.getRequestLine());
-        assertEquals(Constants.CONTENT_TYPE, tokenRequest.getHeader("Content-Type"));
+        basicRequestValidation(tokenRequest, Constants.AUTH_URI);
 
         JSONObject tokenRequestBody = new JSONObject(tokenRequest.getBody().readUtf8());
         assertEquals(Constants.GRANT_TYPE_APP, tokenRequestBody.getString("grant_type"));
 
         // first category request (401 response code)
         RecordedRequest firstCategoryRequest = getRecordedRequest();
-        assertEquals("POST " + config.buildPath(CATEGORY_URI) + " HTTP/1.1", firstCategoryRequest.getRequestLine());
-        assertEquals(Constants.CONTENT_TYPE, firstCategoryRequest.getHeader("Content-Type"));
+        basicRequestValidation(firstCategoryRequest, CATEGORY_URI);
 
         JSONObject categoriesRequestBody = new JSONObject(firstCategoryRequest.getBody().readUtf8());
         assertEquals(ACCESS_TOKEN, categoriesRequestBody.getString("access_token"));
 
         // second access token request
         RecordedRequest secondTokenRequest = getRecordedRequest();
-        assertEquals("POST " + config.buildPath(Constants.AUTH_URI) + " HTTP/1.1", secondTokenRequest.getRequestLine());
-        assertEquals(Constants.CONTENT_TYPE, secondTokenRequest.getHeader("Content-Type"));
+        basicRequestValidation(secondTokenRequest, Constants.AUTH_URI);
 
         JSONObject secondTokenRequestBody = new JSONObject(secondTokenRequest.getBody().readUtf8());
         assertEquals(Constants.GRANT_TYPE_APP, secondTokenRequestBody.getString("grant_type"));
 
         // second category request
         RecordedRequest secondCategoryRequest = getRecordedRequest();
-        assertEquals("POST " + config.buildPath(CATEGORY_URI) + " HTTP/1.1", secondCategoryRequest.getRequestLine());
-        assertEquals(Constants.CONTENT_TYPE, secondCategoryRequest.getHeader("Content-Type"));
+        basicRequestValidation(secondCategoryRequest, CATEGORY_URI);
 
         JSONObject secondCategoriesRequestBody = new JSONObject(secondCategoryRequest.getBody().readUtf8());
         assertEquals(ANOTHER_ACCESS_TOKEN, secondCategoriesRequestBody.getString("access_token"));
@@ -214,16 +208,14 @@ public class GigantierTest {
 
           // access token request
           RecordedRequest tokenRequest = getRecordedRequest();
-          assertEquals("POST " + config.buildPath(Constants.AUTH_URI) + " HTTP/1.1", tokenRequest.getRequestLine());
-          assertEquals(Constants.CONTENT_TYPE, tokenRequest.getHeader("Content-Type"));
+          basicRequestValidation(tokenRequest, Constants.AUTH_URI);
 
           JSONObject tokenRequestBody = new JSONObject(tokenRequest.getBody().readUtf8());
           assertEquals(Constants.GRANT_TYPE_USER, tokenRequestBody.getString("grant_type"));
 
           // user request
           RecordedRequest userRequest = getRecordedRequest();
-          assertEquals("POST " + config.buildPath(USER_URI) + " HTTP/1.1", userRequest.getRequestLine());
-          assertEquals(Constants.CONTENT_TYPE, userRequest.getHeader("Content-Type"));
+          basicRequestValidation(userRequest, USER_URI);
 
           JSONObject userRequestBody = new JSONObject(userRequest.getBody().readUtf8());
           assertEquals(ACCESS_TOKEN, userRequestBody.getString("access_token"));
@@ -255,32 +247,28 @@ public class GigantierTest {
 
           // first access token request
           RecordedRequest tokenRequest = getRecordedRequest();
-          assertEquals("POST " + config.buildPath(Constants.AUTH_URI) + " HTTP/1.1", tokenRequest.getRequestLine());
-          assertEquals(Constants.CONTENT_TYPE, tokenRequest.getHeader("Content-Type"));
+          basicRequestValidation(tokenRequest, Constants.AUTH_URI);
 
           JSONObject tokenRequestBody = new JSONObject(tokenRequest.getBody().readUtf8());
           assertEquals(Constants.GRANT_TYPE_USER, tokenRequestBody.getString("grant_type"));
 
           // first user request (401 response code)
           RecordedRequest firstUserRequest = getRecordedRequest();
-          assertEquals("POST " + config.buildPath(USER_URI) + " HTTP/1.1", firstUserRequest.getRequestLine());
-          assertEquals(Constants.CONTENT_TYPE, firstUserRequest.getHeader("Content-Type"));
+          basicRequestValidation(firstUserRequest, USER_URI);
 
           JSONObject categoriesRequestBody = new JSONObject(firstUserRequest.getBody().readUtf8());
           assertEquals(ACCESS_TOKEN, categoriesRequestBody.getString("access_token"));
 
           // second access token request
           RecordedRequest secondTokenRequest = getRecordedRequest();
-          assertEquals("POST " + config.buildPath(Constants.AUTH_URI) + " HTTP/1.1", secondTokenRequest.getRequestLine());
-          assertEquals(Constants.CONTENT_TYPE, secondTokenRequest.getHeader("Content-Type"));
+          basicRequestValidation(secondTokenRequest, Constants.AUTH_URI);
 
           JSONObject secondTokenRequestBody = new JSONObject(secondTokenRequest.getBody().readUtf8());
           assertEquals(Constants.GRANT_TYPE_REFRESH, secondTokenRequestBody.getString("grant_type"));
 
           // second category request
           RecordedRequest secondCategoryRequest = getRecordedRequest();
-          assertEquals("POST " + config.buildPath(USER_URI) + " HTTP/1.1", secondCategoryRequest.getRequestLine());
-          assertEquals(Constants.CONTENT_TYPE, secondCategoryRequest.getHeader("Content-Type"));
+          basicRequestValidation(secondCategoryRequest, USER_URI);
 
           JSONObject secondUserRequestBody = new JSONObject(secondCategoryRequest.getBody().readUtf8());
           assertEquals(ANOTHER_ACCESS_TOKEN, secondUserRequestBody.getString("access_token"));
@@ -305,6 +293,14 @@ public class GigantierTest {
     SharedPreferences.Editor editor = prefs.edit();
     editor.clear();
     editor.commit();
+  }
+
+  private void basicRequestValidation(RecordedRequest request, String uri) {
+    assertEquals("POST " + config.buildPath(uri) + " HTTP/1.1", request.getRequestLine());
+    assertEquals(Constants.CONTENT_TYPE, request.getHeader("Content-Type"));
+    assertEquals(Constants.SDK_LANG, request.getHeader(Constants.SDK_LANG_HEADER));
+    assertEquals(BuildConfig.VERSION_NAME, request.getHeader(Constants.SDK_VERSION_HEADER));
+    assertEquals(TEST_APP, request.getHeader(Constants.SDK_APP_HEADER));
   }
 
   private void testTemplate(TestExec exec) throws Exception {

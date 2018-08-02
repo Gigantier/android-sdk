@@ -12,6 +12,7 @@ public class Config {
   public int retries = Constants.RETRIES;
   public String authUri = Constants.AUTH_URI;
   public String contentType = Constants.CONTENT_TYPE;
+  public String application;
 
   public String buildUrl(String uri) {
     return this.protocol + "://" + this.host + buildPath(uri);
