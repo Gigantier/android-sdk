@@ -4,6 +4,7 @@ android:
   components:
     - tools
     - platform-tools
+    - tools # travis build issue
     - extra-android-m2repository
     - android-27
 
