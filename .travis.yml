@@ -1,0 +1,44 @@
+language: android
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - extra-android-m2repository
+    - android-27
+
+jdk:
+  - oraclejdk8
+
+env:
+  matrix:
+    - ANDROID_TARGET=android-18 ANDROID_ABI=armeabi-v7a
+
+before_install:
+  # Create and start emulator for the script. Meant to race the install task.
+  - echo no | avdmanager create avd --force -n test -k "system-images;android-18;default;armeabi-v7a"
+  - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
+
+install: ./gradlew clean build assembleAndroidTest --stacktrace
+
+before_script:
+  - android-wait-for-emulator
+  # 82 is KEYCODE_MENU
+  - adb shell input keyevent 82
+
+script:
+  - ./gradlew check -PdisablePreDex --continue --stacktrace
+  - ./gradlew connectedAndroidTest -PdisablePreDex --continue --stacktrace
+
+notifications:
+  email: false
+
+sudo: false
+
+before_cache:
+    - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.gradle/caches/
