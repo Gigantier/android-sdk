@@ -16,7 +16,7 @@ env:
     - ANDROID_TARGET=android-27 ANDROID_ABI=google_apis/armeabi-v7a
 
 before_script:
-  - echo no | android create avd --force --name test --target $ANDROID_TARGET --abi $ANDROID_ABI
+  - echo no | android create avd --force --name test --target android-27 --abi google_apis/armeabi-v7a
   - emulator -avd test -no-skin -no-audio -no-window &amp;
 
 script:
