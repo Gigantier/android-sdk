@@ -35,6 +35,8 @@ Config config = new Config();
 config.clientId = "XXX";
 config.clientSecret = "XXX";
 config.scope = "XXX";
+config.host = "somehost.com";
+config.application = "My App Name";
 
 Gigantier gigantier = new Gigantier(context, config);
 ```
