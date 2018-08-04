@@ -9,21 +9,21 @@ android:
     - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
-    - android-27
-    - sys-img-armeabi-v7a-android-27
+    - android-25
+    - sys-img-armeabi-v7a-android-25
 
 jdk:
   - oraclejdk8
 
 before_script:
-  - echo no | android create avd --force --name test --target android-27 --abi google_apis/armeabi-v7a
-  - emulator -avd test -no-skin -no-audio -no-window &amp;
+  - echo no | android create avd --force --name test --target android-25 --abi armeabi-v7a
+  - emulator -avd test -no-skin -no-audio -no-window &
 
 script:
   - ./gradlew check -PdisablePreDex --continue --stacktrace
   - android-wait-for-emulator
   - adb devices
-  - adb shell input keyevent 82 &amp;
+  - adb shell input keyevent 82 &
   - ./gradlew connectedAndroidTest -PdisablePreDex --continue --stacktrace
 
 notifications:
