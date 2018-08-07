@@ -5,7 +5,7 @@ android:
     - tools
     - platform-tools
     - tools # travis build issue
-    - build-tools-26.0.1
+    - build-tools-27.0.3
     - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
