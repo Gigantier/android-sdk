@@ -84,7 +84,7 @@ public class GigantierTest {
         assertEquals(Constants.GRANT_TYPE_USER, tokenRequestBody.getString("grant_type"));
 
         assertThat(response.accessToken, is(ACCESS_TOKEN));
-        assertThat(response.expires, is(EXPIRES_IN + 20));
+        assertThat(response.expires, is(EXPIRES_IN));
         assertThat(response.refreshToken, is(REFRESH_TOKEN));
 
       }), (statusCode, msg) -> errorListenerTemplate(callback, () -> fail(statusCode + " - " + msg)));
