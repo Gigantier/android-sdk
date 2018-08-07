@@ -19,6 +19,9 @@ android:
 jdk:
   - oraclejdk8
 
+before_install:
+  - yes | sdkmanager "platforms;android-27"
+
 before_script:
   - echo no | android create avd --force --name test --target android-24 --abi armeabi-v7a
   - emulator -avd test -no-skin -no-audio -no-window &
