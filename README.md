@@ -1,9 +1,8 @@
 # Gigantier Android
 
-> SDK to connect you Android app to Giganter API.
-
-
 [![build](https://travis-ci.org/Gigantier/android-sdk.svg?branch=master)](https://travis-ci.org/Gigantier/android-sdk)
+
+> SDK to connect you Android app to Giganter API.
 
 
 [API reference](https://docs.gigantier.com/?android)
