@@ -69,12 +69,12 @@ Some endpoints need the user to be authenticated, once they are obtained, the ``
 gigantier.authenticate("foo@test.com", "1111111", new ResponseListener<Credential>() {
   @Override
   public void onResponse(Credential response) {
-
+    // ...
   }
 }, new ErrorListener() {
   @Override
   public void onError(int code, String msg) {
-
+    // ...
   }
 });
 ```
