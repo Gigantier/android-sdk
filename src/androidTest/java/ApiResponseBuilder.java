@@ -17,12 +17,32 @@ public class ApiResponseBuilder {
     responseJson.put("access_token", GigantierTest.ACCESS_TOKEN);
     responseJson.put("expires_in", GigantierTest.EXPIRES_IN);
     responseJson.put("scope", GigantierTest.SCOPE);
-    responseJson.put("refresh_token", GigantierTest.REFRESH_TOKEN);
     return responseJson;
   }
 
   @NonNull
   public static  JSONObject buildAnotherTokenResponseJson() throws JSONException {
+    JSONObject responseJson = new JSONObject();
+    responseJson.put("ok", true);
+    responseJson.put("access_token", GigantierTest.ANOTHER_ACCESS_TOKEN);
+    responseJson.put("expires_in", GigantierTest.EXPIRES_IN);
+    responseJson.put("scope", GigantierTest.SCOPE);
+    return responseJson;
+  }
+
+  @NonNull
+  public static  JSONObject buildUserTokenResponseJson() throws JSONException {
+    JSONObject responseJson = new JSONObject();
+    responseJson.put("ok", true);
+    responseJson.put("access_token", GigantierTest.ACCESS_TOKEN);
+    responseJson.put("expires_in", GigantierTest.EXPIRES_IN);
+    responseJson.put("scope", GigantierTest.SCOPE);
+    responseJson.put("refresh_token", GigantierTest.REFRESH_TOKEN);
+    return responseJson;
+  }
+
+  @NonNull
+  public static  JSONObject buildAnotherUserTokenResponseJson() throws JSONException {
     JSONObject responseJson = new JSONObject();
     responseJson.put("ok", true);
     responseJson.put("access_token", GigantierTest.ANOTHER_ACCESS_TOKEN);

@@ -71,7 +71,7 @@ public class GigantierTest {
   @Test
   public void authenticate_ok() throws Exception {
     testTemplate(callback -> {
-      JSONObject responseJson = ApiResponseBuilder.buildTokenResponseJson();
+      JSONObject responseJson = ApiResponseBuilder.buildUserTokenResponseJson();
       server.enqueue(new MockResponse().setBody(responseJson.toString()));
 
       gigantier.authenticate(USER_EMAIL, USER_PWD, response -> responseListenerTemplate(callback, () -> {
@@ -198,7 +198,7 @@ public class GigantierTest {
   @Test
   public void authenticated_call_ok() throws Exception {
     testTemplate(callback -> {
-      JSONObject tokenResponseJson = ApiResponseBuilder.buildTokenResponseJson();
+      JSONObject tokenResponseJson = ApiResponseBuilder.buildUserTokenResponseJson();
       JSONObject userResponseJson = ApiResponseBuilder.buildUserResponseJson();
       server.enqueue(new MockResponse().setBody(tokenResponseJson.toString()));
       server.enqueue(new MockResponse().setBody(userResponseJson.toString()));
@@ -233,9 +233,9 @@ public class GigantierTest {
   @Test
   public void authenticated_call_renew_token() throws Exception {
     testTemplate(callback -> {
-      JSONObject tokenResponseJson = ApiResponseBuilder.buildTokenResponseJson();
+      JSONObject tokenResponseJson = ApiResponseBuilder.buildUserTokenResponseJson();
       JSONObject token401ResponseJson = ApiResponseBuilder.buildUnauthorizedTokenResponseJson();
-      JSONObject renewTokenResponseJson = ApiResponseBuilder.buildAnotherTokenResponseJson();
+      JSONObject renewTokenResponseJson = ApiResponseBuilder.buildAnotherUserTokenResponseJson();
       JSONObject userResponseJson = ApiResponseBuilder.buildUserResponseJson();
       server.enqueue(new MockResponse().setBody(tokenResponseJson.toString()));
       server.enqueue(new MockResponse().setBody(token401ResponseJson.toString()).setResponseCode(UNAUTHORIZED_STATUS_CODE));
